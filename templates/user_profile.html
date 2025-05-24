@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ username }} さんのプロフィール | styli</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #fef7f0 0%, #fdf2f8 50%, #fef3e2 100%);
+            min-height: 100vh;
+        }
+        
+        /* アニメーション */
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+        
+        .animate-slide-up {
+            animation: slideUp 0.5s ease-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            0% { transform: translateY(20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        
+        .animate-delay-100 {
+            animation-delay: 0.1s;
+        }
+        
+        .animate-delay-200 {
+            animation-delay: 0.2s;
+        }
+        
+        .animate-delay-300 {
+            animation-delay: 0.3s;
+        }
+        
+        /* グラデーションテキスト */
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-image: linear-gradient(90deg, #fb7185, #f97316);
+        }
+        
+        /* アイコンプルス効果 */
+        .icon-pulse {
+            animation: iconPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes iconPulse {
+            0%, 100% { 
+                transform: scale(1);
+                filter: drop-shadow(0 0 5px rgba(251, 113, 133, 0.3));
+            }
+            50% { 
+                transform: scale(1.05);
+                filter: drop-shadow(0 0 15px rgba(251, 113, 133, 0.6));
+            }
+        }
+        
+        /* ナビゲーションホバー効果 */
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            background: linear-gradient(90deg, #fb7185, #f97316);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+        
+        /* プロフィールカード */
+        .profile-card {
+            background: linear-gradient(135deg, #ffffff 0%, #fef7f0 100%);
+            border: 1px solid #fed7cc;
+            box-shadow: 0 10px 25px -5px rgba(251, 113, 133, 0.1), 0 10px 10px -5px rgba(251, 113, 133, 0.04);
+        }
+        
+        .profile-avatar {
+            border: 4px solid #fed7cc;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .profile-avatar::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            background: linear-gradient(45deg, #fb7185, #f97316, #fb7185);
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .profile-card:hover .profile-avatar::after {
+            opacity: 1;
+        }
+        
+        /* コーディネートカード */
+        .coord-card {
+            background: linear-gradient(135deg, #ffffff 0%, #fef7f0 100%);
+            border: 1px solid #fed7cc;
+            box-shadow: 0 10px 25px -5px rgba(251, 113, 133, 0.1), 0 10px 10px -5px rgba(251, 113, 133, 0.04);
+            transition: all 0.3s ease;
+        }
+        
+        .coord-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(251, 113, 133, 0.1), 0 10px 10px -5px rgba(251, 113, 133, 0.04);
+        }
+        
+        .coord-card img {
+            transition: transform 0.3s ease;
+        }
+        
+        .coord-card:hover img {
+            transform: scale(1.02);
+        }
+        
+        /* フォローボタン */
+        .follow-btn {
+            background: linear-gradient(90deg, #fb7185 0%, #f97316 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .follow-btn:hover {
+            background: linear-gradient(90deg, #f43f5e 0%, #ea580c 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .follow-btn.following {
+            background: linear-gradient(90deg, #6b7280 0%, #4b5563 100%);
+        }
+        
+        .follow-btn.following:hover {
+            background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+        }
+        
+        /* フォロー統計リンク */
+        .follow-stat-link {
+            color: #fb7185;
+            transition: all 0.3s ease;
+        }
+        
+        .follow-stat-link:hover {
+            color: #f43f5e;
+            text-decoration: underline;
+            transform: translateY(-1px);
+        }
+        
+        /* セクションヘッダー */
+        .section-header {
+            background: linear-gradient(135deg, #ffffff 0%, #fef7f0 100%);
+            border: 1px solid #fed7cc;
+            box-shadow: 0 4px 6px -1px rgba(251, 113, 133, 0.1);
+        }
+        
+        /* 空状態 */
+        .empty-state {
+            background: linear-gradient(135deg, #ffffff 0%, #fef7f0 100%);
+            border: 1px solid #fed7cc;
+            box-shadow: 0 10px 25px -5px rgba(251, 113, 133, 0.1), 0 10px 10px -5px rgba(251, 113, 133, 0.04);
+        }
+        
+        /* カスタムカラー */
+        .bg-brand-50 { background-color: #fef7f0; }
+        .bg-brand-100 { background-color: #fed7cc; }
+        .bg-brand-400 { background-color: #fb7185; }
+        .bg-brand-500 { background-color: #f43f5e; }
+        .bg-brand-600 { background-color: #e11d48; }
+        
+        .text-brand-400 { color: #fb7185; }
+        .text-brand-500 { color: #f43f5e; }
+        .text-brand-600 { color: #e11d48; }
+        
+        .border-brand-100 { border-color: #fed7cc; }
+        .border-brand-200 { border-color: #fecaca; }
+        
+        .hover\:text-brand-500:hover { color: #f43f5e; }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- ナビバー -->
+    <nav class="bg-white/90 backdrop-blur-md border-b border-brand-100 px-6 py-4 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <img src="/static/styli_icon.png" alt="styli" class="w-12 h-12 icon-pulse rounded-xl object-cover shadow-lg">
+                <div class="text-3xl font-bold text-gradient">
+                    styli
+                </div>
+            </div>
+            <div class="flex space-x-8">
+                <a href="/mypage" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300 flex items-center group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                    </svg>
+                    ホーム
+                </a>
+                <a href="/upload" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300 flex items-center group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                    </svg>
+                    アップロード
+                </a>
+                <a href="/closet" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300 flex items-center group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M4 3a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V4a1 1 0 00-1-1H4zm3 3h6v2H7V6z" />
+                    </svg>
+                    クローゼット
+                </a>
+                <a href="/profile/edit" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300">マイページ</a>
+                <a href="/users" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300 flex items-center group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v2a2 2 0 002 2h4a2 2 0 002-2V6a4 4 0 00-4-4zM4 12a6 6 0 0112 0v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4z" clip-rule="evenodd" />
+                    </svg>
+                    ユーザー検索
+                </a>
+                <a href="/login" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300 flex items-center group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd" />
+                    </svg>
+                    ログアウト
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto py-10 px-4">
+        <!-- プロフィール情報 -->
+        <div class="profile-card rounded-2xl p-8 mb-8 animate-fade-in">
+            <div class="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
+                <div class="relative">
+                    <img src="{{ profile.icon_path or '/static/default-icon.png' }}" alt="アイコン" class="profile-avatar w-32 h-32 rounded-full object-cover shadow-lg">
+                    <div class="absolute -bottom-3 -right-3 w-12 h-12 bg-gradient-to-r from-brand-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg">
+                        <span class="text-white text-xl">✨</span>
+                    </div>
+                </div>
+                
+                <div class="flex-grow text-center md:text-left">
+                    <h1 class="text-3xl font-bold text-gray-800 mb-3">
+                        <span class="text-gradient">{{ username }}</span> さん
+                    </h1>
+                    <p class="text-gray-600 text-lg mb-6 leading-relaxed">{{ profile.bio or '自己紹介はまだありません。' }}</p>
+
+                    <!-- フォロー中・フォロワー数 -->
+                    <div class="flex justify-center md:justify-start space-x-8 mb-6">
+                        <a href="/profile/{{ username }}/following" class="follow-stat-link text-center" id="follow-count">
+                            <div class="text-2xl font-bold">{{ follow_count }}</div>
+                            <div class="text-sm font-medium">フォロー中</div>
+                        </a>
+                        <a href="/profile/{{ username }}/followers" class="follow-stat-link text-center" id="follower-count">
+                            <div class="text-2xl font-bold">{{ follower_count }}</div>
+                            <div class="text-sm font-medium">フォロワー</div>
+                        </a>
+                    </div>
+
+                    <!-- フォロー・フォロー解除ボタン -->
+                    {% if me and me != username %}
+                    <button
+                        id="follow-btn"
+                        class="follow-btn text-white px-8 py-3 rounded-xl font-semibold shadow-lg transition-all inline-flex items-center"
+                        data-username="{{ username }}"
+                        data-following="{{ 'true' if is_following else 'false' }}"
+                    >
+                        {% if is_following %}
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            フォロー解除
+                        {% else %}
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            フォロー
+                        {% endif %}
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- コーディネート一覧セクション -->
+        <div class="section-header rounded-xl p-4 mb-6 animate-slide-up animate-delay-100">
+            <h2 class="text-xl font-bold text-gray-800 flex items-center">
+                <span class="mr-3 text-2xl">💫</span>
+                {{ username }} さんのコーディネート
+                {% if coordinates %}
+                <span class="ml-3 text-sm font-normal text-gray-500 bg-brand-50 px-3 py-1 rounded-full border border-brand-100">
+                    {{ coordinates|length }}件
+                </span>
+                {% endif %}
+            </h2>
+        </div>
+
+        {% if coordinates %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 animate-slide-up animate-delay-200">
+            {% for coord in coordinates %}
+            <div class="coord-card rounded-2xl overflow-hidden" style="animation: slideUp 0.5s ease-out forwards; animation-delay: {{ 0.2 + (loop.index * 0.05) }}s; opacity: 0;">
+                <div class="grid grid-cols-2 gap-0">
+                    {% for item_id in coord.item_ids.split(",") %}
+                        {% set item = item_dict.get(item_id) %}
+                        {% if item %}
+                        <img src="{{ item.image_path | replace('static/', '/static/') }}" alt="{{ item.name }}" class="w-full h-48 object-cover">
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ coord.title or '無題コーディネート' }}</h3>
+                    <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ coord.description or '説明なし' }}</p>
+                    <div class="flex items-center justify-between">
+                        <p class="text-xs text-gray-500 bg-brand-50 px-3 py-1 rounded-full border border-brand-100">
+                            作成日: {{ coord.created_at.strftime('%Y-%m-%d %H:%M') }}
+                        </p>
+                        <div class="flex items-center text-brand-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            </svg>
+                            <span class="text-sm font-medium">素敵！</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <!-- 空状態 -->
+        <div class="empty-state rounded-3xl p-16 text-center animate-slide-up animate-delay-200">
+            <div class="w-32 h-32 bg-gradient-to-br from-brand-200 to-orange-200 rounded-full mx-auto mb-8 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-700 mb-4">まだコーディネートがありません</h3>
+            <p class="text-gray-600 text-lg leading-relaxed">{{ username }} さんはまだコーディネートを登録していません ✨</p>
+        </div>
+        {% endif %}
+    </main>
+
+    <script>
+    const button = document.getElementById('follow-btn');
+    if (button) {
+        button.addEventListener('click', async () => {
+            console.log("フォローボタンがクリックされました");
+            const username = button.dataset.username;
+            const isFollowing = button.dataset.following === 'true';
+
+            // ボタンを一時的に無効化
+            button.disabled = true;
+            button.style.opacity = '0.7';
+
+            try {
+                const response = await fetch(`/follow/${username}`, {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const newIsFollowing = data.action === 'followed';
+                    
+                    // ボタンの表示を更新
+                    if (newIsFollowing) {
+                        button.innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            フォロー解除
+                        `;
+                        button.classList.add('following');
+                    } else {
+                        button.innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            フォロー
+                        `;
+                        button.classList.remove('following');
+                    }
+                    
+                    button.dataset.following = newIsFollowing.toString();
+                    
+                    // フォロー数の更新
+                    if (data.follow_count !== undefined) {
+                        document.getElementById('follow-count').querySelector('div').textContent = data.follow_count;
+                    }
+                    if (data.follower_count !== undefined) {
+                        document.getElementById('follower-count').querySelector('div').textContent = data.follower_count;
+                    }
+                } else {
+                    alert('フォロー処理に失敗しました');
+                }
+            } catch (error) {
+                console.error('エラー:', error);
+                alert('通信エラーが発生しました');
+            } finally {
+                // ボタンを再有効化
+                button.disabled = false;
+                button.style.opacity = '1';
+            }
+        });
+    }
+    </script>
+
+</body>
+</html>

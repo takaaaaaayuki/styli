@@ -1,0 +1,28 @@
+<!-- templates/user_list_common.html -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }} | Fashion Coordinator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+<!-- ナビゲーションなどあればここに追加 -->
+
+<main class="max-w-4xl mx-auto py-10 px-4">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">{{ username }} さんの{{ title }}</h1>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {% for user in users %}
+        <div class="bg-white rounded-xl shadow p-4 flex flex-col items-center text-center">
+            <img src="{{ user.icon_path or '/static/default-icon.png' }}" class="w-20 h-20 rounded-full object-cover mb-2" alt="アイコン">
+            <h2 class="text-lg font-semibold text-gray-900">{{ user.username }}</h2>
+            <a href="/user/{{ user.username }}" class="text-blue-500 hover:underline text-sm">プロフィールを見る</a>
+        </div>
+        {% endfor %}
+    </div>
+</main>
+
+</body>
+</html>

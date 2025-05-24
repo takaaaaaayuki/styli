@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新規登録 | styli</title>
+    
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #fef7f0 0%, #fdf2f8 50%, #fef3e2 100%);
+            min-height: 100vh;
+        }
+        
+        /* アニメーション */
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-in-out forwards;
+        }
+        
+        .animate-slide-up {
+            animation: slideUp 0.6s ease-out forwards;
+        }
+        
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideUp {
+            0% { transform: translateY(30px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+        
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+        
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+        
+        .animation-delay-4000 {
+            animation-delay: 4s;
+        }
+        
+        .register-container {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 248, 240, 0.8) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(251, 113, 133, 0.1);
+            box-shadow: 
+                0 20px 25px -5px rgba(251, 113, 133, 0.1), 
+                0 10px 10px -5px rgba(251, 113, 133, 0.04),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        }
+        
+        .form-input {
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            box-shadow: 0 0 0 3px rgba(251, 113, 133, 0.15);
+            border-color: #fb7185;
+            transform: translateY(-1px);
+        }
+        
+        .btn-gradient {
+            background: linear-gradient(135deg, #fb7185 0%, #f97316 100%);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-gradient::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .btn-gradient:hover::before {
+            left: 100%;
+        }
+        
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 10px 20px -5px rgba(251, 113, 133, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+        
+        /* カスタムカラー */
+        .bg-brand-50 { background-color: #fef7f0; }
+        .bg-brand-100 { background-color: #fed7cc; }
+        .bg-brand-400 { background-color: #fb7185; }
+        .bg-brand-500 { background-color: #f43f5e; }
+        .bg-brand-600 { background-color: #e11d48; }
+        
+        .text-brand-400 { color: #fb7185; }
+        .text-brand-500 { color: #f43f5e; }
+        .text-brand-600 { color: #e11d48; }
+        
+        .border-brand-100 { border-color: #fed7cc; }
+        .border-brand-200 { border-color: #fecaca; }
+        .border-brand-500 { border-color: #f43f5e; }
+        
+        .hover\:text-brand-500:hover { color: #f43f5e; }
+        
+        /* グラデーションテキスト */
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-image: linear-gradient(135deg, #fb7185, #f97316);
+        }
+        
+        /* アイコンプルス効果 */
+        .icon-pulse {
+            animation: iconPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes iconPulse {
+            0%, 100% { 
+                transform: scale(1);
+                filter: drop-shadow(0 0 5px rgba(251, 113, 133, 0.3));
+            }
+            50% { 
+                transform: scale(1.05);
+                filter: drop-shadow(0 0 15px rgba(251, 113, 133, 0.6));
+            }
+        }
+        
+        /* ナビゲーションホバー効果 */
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            background: linear-gradient(90deg, #fb7185, #f97316);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+        
+        /* 入力フィールドアニメーション */
+        .input-container {
+            position: relative;
+        }
+        
+        .input-container .input-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus + .input-icon {
+            color: #fb7185;
+            transform: scale(1.1);
+        }
+        
+        /* スタッガードアニメーション */
+        .animate-delay-100 {
+            animation-delay: 0.1s;
+        }
+        
+        .animate-delay-200 {
+            animation-delay: 0.2s;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col relative overflow-hidden">
+
+    <!-- 背景のブロブアニメーション -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute top-0 left-0 w-72 h-72 bg-brand-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+        <div class="absolute top-0 right-0 w-72 h-72 bg-orange-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div class="absolute -bottom-8 left-20 w-72 h-72 bg-pink-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+    </div>
+
+    <!-- ナビバー -->
+    <nav class="bg-white/90 backdrop-blur-md border-b border-brand-100 px-6 py-4 relative z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <img src="/static/styli_icon.png" alt="styli" class="w-12 h-12 icon-pulse rounded-xl object-cover shadow-lg">
+                <div class="text-3xl font-bold text-gradient">
+                    styli
+                </div>
+            </div>
+            <div class="flex space-x-8">
+                <a href="/" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300 flex items-center group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                    </svg>
+                    ホーム
+                </a>
+                <a href="/login" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300 flex items-center group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd" />
+                    </svg>
+                    ログイン
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <main class="flex-grow flex items-center justify-center px-4 py-12 relative z-10">
+        <div class="w-full max-w-md">
+            <div class="register-container rounded-3xl p-10 animate-fade-in shadow-2xl">
+                <div class="text-center mb-10">
+                    <div class="inline-block p-4 rounded-2xl bg-gradient-to-r from-brand-50 to-orange-50 text-brand-500 mb-6 animate-float">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2m8-6a4 4 0 100-8 4 4 0 000 8zm8-2v-2a4 4 0 00-3-3.87M16 3a4 4 0 013 3.87" />
+                        </svg>
+                    </div>
+                    <h1 class="text-3xl font-bold text-gray-800 mb-3">
+                        <span class="text-gradient">styli</span> を始めよう
+                    </h1>
+                    <p class="text-gray-600 text-lg leading-relaxed">
+                        あなただけのコーデ管理を<br>
+                        今すぐスタート ✨
+                    </p>
+                </div>
+                
+                <form method="post" action="/register" class="space-y-6 animate-slide-up">
+                    <div class="input-container animate-slide-up animate-delay-100">
+                        <label for="username" class="block text-sm font-semibold text-gray-700 mb-2">ユーザー名</label>
+                        <div class="relative">
+                            <input id="username" type="text" name="username" placeholder="ユーザー名を入力" required
+                                class="form-input block w-full pl-12 pr-4 py-4 border-2 border-brand-100 rounded-xl focus:outline-none focus:border-brand-500 transition-all duration-300 text-gray-900 placeholder-gray-400 bg-white/80 backdrop-blur-sm">
+                            <div class="input-icon absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="input-container animate-slide-up animate-delay-200">
+                        <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">パスワード</label>
+                        <div class="relative">
+                            <input id="password" type="password" name="password" placeholder="パスワードを入力" required
+                                class="form-input block w-full pl-12 pr-4 py-4 border-2 border-brand-100 rounded-xl focus:outline-none focus:border-brand-500 transition-all duration-300 text-gray-900 placeholder-gray-400 bg-white/80 backdrop-blur-sm">
+                            <div class="input-icon absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-4">
+                        <button type="submit" class="btn-gradient w-full flex justify-center items-center text-white font-semibold py-4 px-6 rounded-xl text-lg shadow-lg relative z-10 animate-slide-up animate-delay-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            アカウントを作成
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="mt-8 text-center">
+                    <p class="text-gray-600 text-lg">
+                        すでにアカウントをお持ちですか？ 
+                        <a href="/login" class="text-brand-600 font-semibold hover:text-brand-500 transition duration-300 underline decoration-2 underline-offset-2">
+                            ログイン
+                        </a>
+                    </p>
+                </div>
+                
+                <div class="mt-8 pt-6 border-t border-brand-100">
+                    <div class="flex items-center justify-center space-x-4 text-sm text-gray-500">
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            完全無料
+                        </div>
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                            安全・安心
+                        </div>
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                            すぐに開始
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 text-center text-sm text-gray-500">
+                <div class="flex justify-center items-center space-x-2 mb-2">
+                    <img src="/static/styli_icon.png" alt="styli" class="w-6 h-6 rounded-lg opacity-60">
+                    <span class="text-gradient font-bold text-base">styli</span>
+                </div>
+                <p>© 2025 styli. All rights reserved.</p>
+                <p class="text-xs mt-1">Made with <span class="text-red-500 animate-pulse">❤️</span> for fashion lovers</p>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

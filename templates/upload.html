@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>styli | アイテム登録</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #fef7f0 0%, #fdf2f8 50%, #fef3e2 100%);
+            min-height: 100vh;
+        }
+        
+        /* アニメーション */
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+        
+        .animate-slide-up {
+            animation: slideUp 0.5s ease-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            0% { transform: translateY(20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        
+        .animate-delay-100 {
+            animation-delay: 0.1s;
+        }
+        
+        .animate-delay-200 {
+            animation-delay: 0.2s;
+        }
+        
+        .animate-delay-300 {
+            animation-delay: 0.3s;
+        }
+        
+        /* グラデーションテキスト */
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-image: linear-gradient(90deg, #fb7185, #f97316);
+        }
+        
+        /* アイコンプルス効果 */
+        .icon-pulse {
+            animation: iconPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes iconPulse {
+            0%, 100% { 
+                transform: scale(1);
+                filter: drop-shadow(0 0 5px rgba(251, 113, 133, 0.3));
+            }
+            50% { 
+                transform: scale(1.05);
+                filter: drop-shadow(0 0 15px rgba(251, 113, 133, 0.6));
+            }
+        }
+        
+        /* ナビゲーションホバー効果 */
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            background: linear-gradient(90deg, #fb7185, #f97316);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(251, 113, 133, 0.1), 0 10px 10px -5px rgba(251, 113, 133, 0.04);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #fed7cc;
+            border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #fb7185;
+        }
+
+        .file-drop-area {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 2rem;
+            border: 2px dashed #fed7cc;
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #fef7f0 0%, #fef3e2 100%);
+        }
+
+        .file-drop-area:hover, .file-drop-area.drag-active {
+            border-color: #fb7185;
+            background: linear-gradient(135deg, #ffffff 0%, #fef7f0 100%);
+            transform: translateY(-1px);
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 640px) {
+            .image-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* カスタムカラー */
+        .bg-brand-50 { background-color: #fef7f0; }
+        .bg-brand-100 { background-color: #fed7cc; }
+        .bg-brand-400 { background-color: #fb7185; }
+        .bg-brand-500 { background-color: #f43f5e; }
+        .bg-brand-600 { background-color: #e11d48; }
+        
+        .text-brand-400 { color: #fb7185; }
+        .text-brand-500 { color: #f43f5e; }
+        .text-brand-600 { color: #e11d48; }
+        
+        .border-brand-100 { border-color: #fed7cc; }
+        .border-brand-200 { border-color: #fecaca; }
+        
+        .hover\:text-brand-500:hover { color: #f43f5e; }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen flex flex-col">
+        <!-- ナビバー -->
+        <nav class="bg-white/90 backdrop-blur-md border-b border-brand-100 px-6 py-4 sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <img src="/static/styli_icon.png" alt="styli" class="w-12 h-12 icon-pulse rounded-xl object-cover shadow-lg">
+                    <div class="text-3xl font-bold text-gradient">
+                        styli
+                    </div>
+                </div>
+                <div class="flex space-x-8">
+                    <a href="/mypage" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300 flex items-center group">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                        </svg>
+                        ホーム
+                    </a>
+                    <a href="/upload" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300 flex items-center group">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                        </svg>
+                        アップロード
+                    </a>
+                    <a href="/closet" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300 flex items-center group">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M4 3a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V4a1 1 0 00-1-1H4zm3 3h6v2H7V6z" />
+                        </svg>
+                        クローゼット
+                    </a>
+                    <a href="/profile/edit" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300">マイページ</a>
+                    <a href="/users" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300 flex items-center group">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v2a2 2 0 002 2h4a2 2 0 002-2V6a4 4 0 00-4-4zM4 12a6 6 0 0112 0v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4z" clip-rule="evenodd" />
+                        </svg>
+                        ユーザー検索
+                    </a>
+                    <a href="/login" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300 flex items-center group">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd" />
+                        </svg>
+                        ログアウト
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="flex-grow container mx-auto px-4 sm:px-6 py-8">
+            <div id="app" class="max-w-4xl mx-auto"></div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-white/80 backdrop-blur-sm border-t border-brand-100 py-6">
+            <div class="container mx-auto px-4 sm:px-6">
+                <div class="text-center flex items-center justify-center space-x-2">
+                    <img src="/static/styli_icon.png" alt="styli" class="w-6 h-6 rounded opacity-80">
+                    <span class="text-sm text-gray-600">© 2025</span>
+                    <span class="text-sm font-bold text-gradient">styli</span>
+                    <span class="text-sm text-gray-600">All rights reserved.</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script type="text/javascript">
+        const username = "{{ username }}";
+        const e = React.createElement;
+
+        const App = () => {
+            const [itemName, setItemName] = React.useState("");
+            const [file, setFile] = React.useState(null);
+            const [filePreview, setFilePreview] = React.useState("");
+            const [season, setSeason] = React.useState("春");
+            const [tpo, setTpo] = React.useState("カジュアル");
+            const [items, setItems] = React.useState([]);
+            const [loading, setLoading] = React.useState(false);
+            const [success, setSuccess] = React.useState(false);
+            const [dragActive, setDragActive] = React.useState(false);
+            const [view, setView] = React.useState("grid"); // grid or list
+            const fileInputRef = React.useRef(null);
+
+            React.useEffect(() => {
+                fetch("/items")
+                    .then(res => res.json())
+                    .then(data => setItems(data));
+            }, []);
+
+            const handleAdd = async () => {
+                if (!itemName || !file) return;
+
+                setLoading(true);
+
+                const formData = new FormData();
+                formData.append("username", username);
+                formData.append("name", itemName);
+                formData.append("file", file);
+                formData.append("season", season);
+                formData.append("tpo", tpo);
+
+                try {
+                    const res = await fetch("/upload-item", { method: "POST", body: formData });
+                    if (res.ok) {
+                        const result = await res.json();
+                        setItems(prev => [...prev, {
+                            id: result.id,
+                            name: itemName,
+                            image_path: result.image_path || "",
+                            dominant_color: result.dominant_color || "不明",
+                            labels: result.labels || "不明",
+                            season: season,
+                            tpo: tpo
+                        }]);
+                        setItemName("");
+                        setFile(null);
+                        setFilePreview("");
+                        setSuccess(true);
+                        setTimeout(() => setSuccess(false), 3000);
+                    } else alert("登録に失敗しました");
+                } catch (err) {
+                    console.error("通信エラー:", err);
+                    alert("通信エラーが発生しました");
+                }
+                setLoading(false);
+            };
+
+            const handleFileChange = e => {
+                const file = e.target.files[0];
+                if (file) {
+                    setFile(file);
+                    const reader = new FileReader();
+                    reader.onload = () => setFilePreview(reader.result);
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            const handleDelete = async (id) => {
+                const res = await fetch(`/delete-item/${id}`, { method: "POST" });
+                if (res.ok) setItems(prev => prev.filter(item => item.id !== id));
+                else alert("削除に失敗しました");
+            };
+
+            const handleDrag = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (e.type === "dragenter" || e.type === "dragover") {
+                    setDragActive(true);
+                } else if (e.type === "dragleave") {
+                    setDragActive(false);
+                }
+            };
+
+            const handleDrop = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setDragActive(false);
+                
+                if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                    const file = e.dataTransfer.files[0];
+                    setFile(file);
+                    const reader = new FileReader();
+                    reader.onload = () => setFilePreview(reader.result);
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            const handleButtonClick = () => {
+                fileInputRef.current.click();
+            };
+
+            // 季節に応じた色を返す関数
+            const getSeasonColor = (season) => {
+                switch(season) {
+                    case "春": return "bg-pink-100 text-pink-800 border-pink-200";
+                    case "夏": return "bg-blue-100 text-blue-800 border-blue-200";
+                    case "秋": return "bg-amber-100 text-amber-800 border-amber-200";
+                    case "冬": return "bg-indigo-100 text-indigo-800 border-indigo-200";
+                    default: return "bg-gray-100 text-gray-800 border-gray-200";
+                }
+            };
+
+            // TPOに応じた色を返す関数
+            const getTPOColor = (tpo) => {
+                switch(tpo) {
+                    case "カジュアル": return "bg-emerald-100 text-emerald-800 border-emerald-200";
+                    case "ビジネス": return "bg-slate-100 text-slate-800 border-slate-200";
+                    case "デート": return "bg-rose-100 text-rose-800 border-rose-200";
+                    case "面接": return "bg-violet-100 text-violet-800 border-violet-200";
+                    case "フォーマル": return "bg-gray-100 text-gray-800 border-gray-200";
+                    default: return "bg-gray-100 text-gray-800 border-gray-200";
+                }
+            };
+
+            return e("div", { className: "space-y-8" },
+                // ヘッダーセクション
+                e("div", { 
+                    className: "bg-gradient-to-r from-brand-500 to-orange-500 text-white rounded-2xl shadow-lg p-6 animate-fade-in",
+                    style: { background: "linear-gradient(90deg, #fb7185 0%, #f97316 100%)" }
+                },
+                    e("div", { className: "flex items-center mb-2" },
+                        e("div", { className: "w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-white mr-4" },
+                            e("svg", { xmlns: "http://www.w3.org/2000/svg", className: "h-7 w-7", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor" },
+                                e("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" })
+                            )
+                        ),
+                        e("div", null,
+                            e("h1", { className: "text-2xl font-bold mb-1" }, `ようこそ、${username} さん！`),
+                            e("p", { className: "text-white/90" }, "あなたのファッションアイテムを登録・管理しましょう ✨")
+                        )
+                    )
+                ),
+                
+                // 成功メッセージ
+                success && e("div", { 
+                    id: "success-message",
+                    className: "bg-emerald-50 border border-emerald-200 text-emerald-700 p-4 rounded-xl shadow-md flex items-center animate-fade-in",
+                    style: { background: "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)" }
+                }, 
+                    e("svg", { xmlns: "http://www.w3.org/2000/svg", className: "h-6 w-6 mr-3", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor" },
+                        e("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M5 13l4 4L19 7" })
+                    ),
+                    "アイテムの登録が完了しました！"
+                ),
+                
+                // 登録フォーム
+                e("div", { 
+                    className: "bg-white rounded-2xl shadow-lg overflow-hidden p-8 animate-slide-up border border-brand-100",
+                    style: { background: "linear-gradient(135deg, #ffffff 0%, #fef7f0 100%)" }
+                },
+                    e("h2", { className: "text-xl font-semibold mb-6 flex items-center" }, 
+                        e("div", { className: "w-8 h-8 bg-gradient-to-br from-brand-500 to-orange-500 rounded-lg flex items-center justify-center text-white mr-3" },
+                            e("svg", { xmlns: "http://www.w3.org/2000/svg", className: "h-5 w-5", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor" },
+                                e("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M12 6v6m0 0v6m0-6h6m-6 0H6" })
+                            )
+                        ),
+                        "新しいアイテムを登録"
+                    ),
+                    e("div", { className: "space-y-6" },
+                        // アイテム名入力
+                        e("div", { className: "space-y-2" },
+                            e("label", { className: "block text-sm font-semibold text-gray-700" }, "アイテム名"),
+                            e("input", {
+                                type: "text", 
+                                placeholder: "例: 白Tシャツ、デニムパンツ", 
+                                value: itemName,
+                                onChange: (e) => setItemName(e.target.value),
+                                className: "w-full px-4 py-3 border-2 border-brand-100 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all bg-brand-50"
+                            })
+                        ),
+                        
+                        // ファイルアップロード
+                        e("div", { className: "space-y-2" },
+                            e("label", { className: "block text-sm font-semibold text-gray-700" }, "画像"),
+                            e("div", { 
+                                className: `file-drop-area ${dragActive ? 'drag-active' : ''}`,
+                                onDragEnter: handleDrag,
+                                onDragLeave: handleDrag,
+                                onDragOver: handleDrag,
+                                onDrop: handleDrop
+                            },
+                                filePreview ? (
+                                    e("div", { className: "relative w-full" },
+                                        e("img", { 
+                                            src: filePreview, 
+                                            className: "mx-auto max-h-64 rounded-xl shadow-md object-contain" 
+                                        }),
+                                        e("button", {
+                                            className: "absolute top-2 right-2 bg-white rounded-full p-2 shadow-lg hover:bg-gray-50 transition-colors border border-brand-100",
+                                            onClick: () => { setFile(null); setFilePreview(""); }
+                                        },
+                                            e("svg", { xmlns: "http://www.w3.org/2000/svg", className: "h-5 w-5 text-gray-600", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor" },
+                                                e("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M6 18L18 6M6 6l12 12" })
+                                            )
+                                        )
+                                    )
+                                ) : (
+                                    e("div", { className: "text-center" },
+                                        e("svg", { xmlns: "http://www.w3.org/2000/svg", className: "mx-auto h-12 w-12 text-brand-400", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor" },
+                                            e("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" })
+                                        ),
+                                        e("p", { className: "mt-2 text-sm text-gray-700 font-medium" }, "画像をドラッグ＆ドロップ"),
+                                        e("p", { className: "text-xs text-gray-500" }, "または"),
+                                        e("button", {
+                                            onClick: handleButtonClick,
+                                            className: "mt-3 px-6 py-2 text-sm font-semibold text-white bg-gradient-to-r from-brand-500 to-orange-500 rounded-lg hover:from-brand-600 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 transition-all shadow-md",
+                                            style: { background: "linear-gradient(90deg, #fb7185 0%, #f97316 100%)" }
+                                        }, "ファイルを選択")
+                                    )
+                                ),
+                                e("input", {
+                                    ref: fileInputRef,
+                                    type: "file",
+                                    onChange: handleFileChange,
+                                    className: "hidden"
+                                })
+                            )
+                        ),
+                        
+                        // 属性選択（季節とTPO）
+                        e("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-6" },
+                            e("div", { className: "space-y-2" },
+                                e("label", { className: "block text-sm font-semibold text-gray-700" }, "季節"),
+                                e("div", { className: "relative" },
+                                    e("select", {
+                                        value: season,
+                                        onChange: (e) => setSeason(e.target.value),
+                                        className: "block w-full pl-4 pr-10 py-3 text-base border-2 border-brand-100 focus:outline-none focus:ring-brand-500 focus:border-brand-500 rounded-lg appearance-none bg-brand-50 transition-all"
+                                    }, 
+                                        ["春", "夏", "秋", "冬"].map(opt => 
+                                            e("option", { key: opt, value: opt }, opt)
+                                        )
+                                    ),
+                                    e("div", { className: "pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-brand-500" },
+                                        e("svg", { className: "h-5 w-5", xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 20 20", fill: "currentColor", "aria-hidden": "true" },
+                                            e("path", { fillRule: "evenodd", d: "M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z", clipRule: "evenodd" })
+                                        )
+                                    )
+                                )
+                            ),
+                            e("div", { className: "space-y-2" },
+                                e("label", { className: "block text-sm font-semibold text-gray-700" }, "TPO"),
+                                e("div", { className: "relative" },
+                                    e("select", {
+                                        value: tpo,
+                                        onChange: (e) => setTpo(e.target.value),
+                                        className: "block w-full pl-4 pr-10 py-3 text-base border-2 border-brand-100 focus:outline-none focus:ring-brand-500 focus:border-brand-500 rounded-lg appearance-none bg-brand-50 transition-all"
+                                    }, 
+                                        ["カジュアル", "ビジネス", "デート", "面接", "フォーマル"].map(opt => 
+                                            e("option", { key: opt, value: opt }, opt)
+                                        )
+                                    ),
+                                    e("div", { className: "pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-brand-500" },
+                                        e("svg", { className: "h-5 w-5", xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 20 20", fill: "currentColor", "aria-hidden": "true" },
+                                            e("path", { fillRule: "evenodd", d: "M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z", clipRule: "evenodd" })
+                                        )
+                                    )
+                                )
+                            )
+                        ),
+                        
+                        // 登録ボタン
+                        e("button", {
+                            onClick: handleAdd,
+                            disabled: loading || !itemName || !file,
+                            className: `w-full flex justify-center items-center text-white py-4 px-6 rounded-xl shadow-lg transition-all font-semibold text-lg ${
+                                loading || !itemName || !file 
+                                    ? 'bg-gray-400 cursor-not-allowed opacity-70' 
+                                    : 'bg-gradient-to-r from-brand-500 to-orange-500 hover:from-brand-600 hover:to-orange-600 hover:shadow-xl hover:-translate-y-0.5'
+                            }`,
+                            style: !loading && itemName && file ? { background: "linear-gradient(90deg, #fb7185 0%, #f97316 100%)" } : {}
+                        }, loading
+                            ? e("div", { className: "flex items-center" },
+                                e("svg", { className: "animate-spin -ml-1 mr-3 h-6 w-6 text-white", xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24" },
+                                    e("circle", { className: "opacity-25", cx: "12", cy: "12", r: "10", stroke: "currentColor", strokeWidth: "4" }),
+                                    e("path", { className: "opacity-75", fill: "currentColor", d: "M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" })
+                                ),
+                                "登録中..."
+                            )
+                            : e("div", { className: "flex items-center" },
+                                e("svg", { xmlns: "http://www.w3.org/2000/svg", className: "h-6 w-6 mr-3", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor" },
+                                    e("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M12 6v6m0 0v6m0-6h6m-6 0H6" })
+                                ),
+                                "アイテムを登録"
+                            )
+                        )
+                    )
+                ),
+                
+                // アイテム一覧
+                items.length > 0 && e("div", { className: "animate-slide-up animate-delay-200" },
+                    e("div", { className: "flex justify-between items-center mb-6" },
+                        e("h2", { className: "text-xl font-semibold flex items-center" }, 
+                            e("div", { className: "w-8 h-8 bg-gradient-to-br from-brand-500 to-orange-500 rounded-lg flex items-center justify-center text-white mr-3" },
+                                e("svg", { xmlns: "http://www.w3.org/2000/svg", className: "h-5 w-5", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor" },
+                                    e("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M4 6h16M4 10h16M4 14h16M4 18h16" })
+                                )
+                            ),
+                            `登録済みアイテム (${items.length})`
+                        ),
+                        e("div", { className: "flex space-x-2" },
+                            e("button", {
+                                onClick: () => setView("grid"),
+                                className: `p-3 rounded-lg transition-all ${view === "grid" ? "bg-brand-100 text-brand-700 shadow-md" : "text-gray-500 hover:bg-gray-100"}`
+                            },
+                                e("svg", { xmlns: "http://www.w3.org/2000/svg", className: "h-5 w-5", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor" },
+                                    e("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" })
+                                )
+                            ),
+                            e("button", {
+                                onClick: () => setView("list"),
+                                className: `p-3 rounded-lg transition-all ${view === "list" ? "bg-brand-100 text-brand-700 shadow-md" : "text-gray-500 hover:bg-gray-100"}`
+                            },
+                                e("svg", { xmlns: "http://www.w3.org/2000/svg", className: "h-5 w-5", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor" },
+                                    e("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M4 6h16M4 12h16M4 18h16" })
+                                )
+                            )
+                        )
+                    ),
+                    
+                    // グリッドビュー
+                    view === "grid" && e("div", { className: "image-grid" },
+                        items.map(item => e("div", {
+                            key: item.id,
+                            id: `item-${item.id}`,
+                            className: "bg-white rounded-2xl overflow-hidden shadow-lg transition card-hover border border-brand-100",
+                            style: { background: "linear-gradient(135deg, #ffffff 0%, #fef7f0 100%)" }
+                        },
+                            e("div", { className: "aspect-w-1 aspect-h-1 relative bg-brand-50" },
+                                e("img", {
+                                    src: item.image_path,
+                                    alt: item.name,
+                                    className: "w-full h-48 object-cover"
+                                }),
+                                e("button", {
+                                    onClick: () => handleDelete(item.id),
+                                    className: "absolute top-3 right-3 bg-white bg-opacity-90 hover:bg-opacity-100 rounded-full p-2 shadow-lg transition-all hover:text-red-600 hover:scale-110",
+                                    title: "削除"
+                                },
+                                    e("svg", { xmlns: "http://www.w3.org/2000/svg", className: "h-5 w-5", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor" },
+                                        e("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" })
+                                    )
+                                )
+                            ),
+                            e("div", { className: "p-5" },
+                                e("h3", { className: "font-semibold text-gray-900 text-lg mb-3" }, item.name),
+                                e("div", { className: "flex flex-wrap gap-2 mb-3" },
+                                    (item.labels || "不明").split(',').map((label, i) =>
+                                        e("span", {
+                                            key: i,
+                                            className: "inline-block bg-brand-50 text-brand-700 px-3 py-1 text-xs font-semibold rounded-full border border-brand-200"
+                                        }, label.trim())
+                                    )
+                                ),
+                                e("div", { className: "flex flex-wrap gap-2 mt-3" },
+                                    e("span", {
+                                        className: `inline-block px-3 py-1 text-xs font-semibold rounded-full border ${getSeasonColor(item.season)}`
+                                    }, item.season),
+                                    e("span", {
+                                        className: `inline-block px-3 py-1 text-xs font-semibold rounded-full border ${getTPOColor(item.tpo)}`
+                                    }, item.tpo)
+                                )
+                            )
+                        ))
+                    ),
+                    
+                    // リストビュー
+                    view === "list" && e("div", { 
+                        className: "bg-white rounded-2xl shadow-lg overflow-hidden border border-brand-100",
+                        style: { background: "linear-gradient(135deg, #ffffff 0%, #fef7f0 100%)" }
+                    },
+                        e("ul", { className: "divide-y divide-brand-100" },
+                            items.map(item => e("li", {
+                                key: item.id,
+                                id: `item-${item.id}`,
+                                className: "p-5 hover:bg-brand-50 transition flex items-center gap-4"
+                            },
+                                e("div", { className: "flex-shrink-0" },
+                                    e("img", {
+                                        src: item.image_path,
+                                        alt: item.name,
+                                        className: "w-16 h-16 object-cover rounded-xl border-2 border-brand-100 shadow-sm"
+                                    })
+                                ),
+                                e("div", { className: "flex-grow min-w-0" },
+                                    e("h3", { className: "font-semibold text-gray-900 text-lg" }, item.name),
+                                    e("div", { className: "flex flex-wrap gap-2 mt-2" },
+                                        e("span", {
+                                            className: `inline-block px-3 py-1 text-xs font-semibold rounded-full border ${getSeasonColor(item.season)}`
+                                        }, item.season),
+                                        e("span", {
+                                            className: `inline-block px-3 py-1 text-xs font-semibold rounded-full border ${getTPOColor(item.tpo)}`
+                                        }, item.tpo)
+                                    )
+                                ),
+                                e("div", { className: "flex-shrink-0 ml-2" },
+                                    e("button", {
+                                        onClick: () => handleDelete(item.id),
+                                        className: "text-gray-400 hover:text-red-600 p-2 rounded-full hover:bg-red-50 transition-all hover:scale-110",
+                                        title: "削除"
+                                    },
+                                        e("svg", { xmlns: "http://www.w3.org/2000/svg", className: "h-6 w-6", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor" },
+                                            e("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" })
+                                        )
+                                    )
+                                )
+                            ))
+                        )
+                    )
+                ),
+                
+                // アイテムがない場合
+                items.length === 0 && e("div", { 
+                    className: "text-center py-16 px-4 bg-white rounded-2xl shadow-lg animate-fade-in border border-brand-100",
+                    style: { background: "linear-gradient(135deg, #ffffff 0%, #fef7f0 100%)" }
+                },
+                    e("div", { className: "w-32 h-32 bg-gradient-to-br from-brand-200 to-orange-200 rounded-full mx-auto mb-8 flex items-center justify-center" },
+                        e("svg", { xmlns: "http://www.w3.org/2000/svg", className: "h-16 w-16 text-brand-500", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor" },
+                            e("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" })
+                        )
+                    ),
+                    e("h3", { className: "text-2xl font-bold text-gray-700 mb-4" }, "アイテムがまだありません"),
+                    e("p", { className: "text-gray-600 text-lg leading-relaxed" }, "上のフォームから最初のアイテムを登録してみましょう ✨")
+                )
+            );
+        };
+
+        ReactDOM.createRoot(document.getElementById("app")).render(e(App));
+    </script>
+</body>
+</html>

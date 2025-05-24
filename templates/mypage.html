@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>マイページ | styli</title>
+    
+    <!-- Tailwind CDN - シンプルバージョン -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #fef7f0 0%, #fdf2f8 50%, #fef3e2 100%);
+        }
+        
+        /* アニメーション */
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+        
+        .animate-slide-up {
+            animation: slideUp 0.5s ease-out forwards;
+        }
+        
+        .animate-slide-in-right {
+            animation: slideInRight 0.5s ease-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            0% { transform: translateY(20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes slideInRight {
+            0% { transform: translateX(20px); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+        
+        .animate-delay-100 {
+            animation-delay: 0.1s;
+        }
+        
+        .animate-delay-200 {
+            animation-delay: 0.2s;
+        }
+        
+        /* カードスタイル */
+        .card-container {
+            background: linear-gradient(135deg, #ffffff 0%, #fef7f0 100%);
+            box-shadow: 0 10px 25px -5px rgba(251, 113, 133, 0.1), 0 10px 10px -5px rgba(251, 113, 133, 0.04);
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #fef7f0 0%, #fef3e2 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(251, 113, 133, 0.2), 0 4px 6px -2px rgba(251, 113, 133, 0.1);
+        }
+        
+        .action-card {
+            transition: all 0.3s ease;
+        }
+        
+        .action-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .btn-gradient {
+            background: linear-gradient(90deg, #fb7185 0%, #f97316 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient:hover {
+            background: linear-gradient(90deg, #f43f5e 0%, #ea580c 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        /* 波形背景 */
+        .wave-bg {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23fef7f0' fill-opacity='0.5' d='M0,128L48,144C96,160,192,192,288,186.7C384,181,480,139,576,133.3C672,128,768,160,864,181.3C960,203,1056,213,1152,202.7C1248,192,1344,160,1392,144L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: center bottom;
+            background-repeat: no-repeat;
+        }
+        
+        /* カスタムカラー */
+        .bg-brand-50 { background-color: #fef7f0; }
+        .bg-brand-100 { background-color: #fed7cc; }
+        .bg-brand-400 { background-color: #fb7185; }
+        .bg-brand-500 { background-color: #f43f5e; }
+        .bg-brand-600 { background-color: #e11d48; }
+        
+        .text-brand-200 { color: #fecaca; }
+        .text-brand-500 { color: #f43f5e; }
+        .text-brand-600 { color: #e11d48; }
+        
+        .hover\:text-brand-500:hover { color: #f43f5e; }
+        
+        .border-brand-100 { border-color: #fed7cc; }
+        
+        .from-brand-500 { --tw-gradient-from: #f43f5e; }
+        .from-brand-600 { --tw-gradient-from: #e11d48; }
+        .to-brand-400 { --tw-gradient-to: #fb7185; }
+        .to-brand-50 { --tw-gradient-to: #fef7f0; }
+        
+        /* その他のカスタムカラー */
+        .bg-purple-50 { background-color: #fdf2f8; }
+        .bg-purple-100 { background-color: #fce7f3; }
+        .bg-purple-400 { background-color: #f472b6; }
+        .bg-purple-500 { background-color: #ec4899; }
+        .border-purple-100 { border-color: #fce7f3; }
+        .border-purple-300 { border-color: #fbcfe8; }
+        .text-purple-600 { color: #db2777; }
+        .hover\:bg-purple-50:hover { background-color: #fdf2f8; }
+        
+        .bg-amber-50 { background-color: #fffbeb; }
+        .bg-amber-100 { background-color: #fef3c7; }
+        .bg-amber-400 { background-color: #fbbf24; }
+        .bg-amber-500 { background-color: #f59e0b; }
+        .border-amber-100 { border-color: #fef3c7; }
+        .border-amber-300 { border-color: #fcd34d; }
+        .text-amber-600 { color: #d97706; }
+        .hover\:bg-amber-50:hover { background-color: #fffbeb; }
+        
+        .bg-emerald-50 { background-color: #ecfdf5; }
+        .bg-emerald-100 { background-color: #d1fae5; }
+        .bg-emerald-400 { background-color: #34d399; }
+        .bg-emerald-500 { background-color: #10b981; }
+        .border-emerald-100 { border-color: #d1fae5; }
+        .text-emerald-600 { color: #059669; }
+        .hover\:text-emerald-500:hover { color: #10b981; }
+        
+        /* グラデーションテキスト */
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-image: linear-gradient(90deg, #fb7185, #f97316);
+        }
+        
+        /* アイコンプルス効果 */
+        .icon-pulse {
+            animation: iconPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes iconPulse {
+            0%, 100% { 
+                transform: scale(1);
+                filter: drop-shadow(0 0 5px rgba(251, 113, 133, 0.3));
+            }
+            50% { 
+                transform: scale(1.05);
+                filter: drop-shadow(0 0 15px rgba(251, 113, 133, 0.6));
+            }
+        }
+        
+        /* 追加アニメーション */
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        
+        @keyframes tilt {
+            0%, 50%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(1deg); }
+            75% { transform: rotate(-1deg); }
+        }
+        
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+        
+        .animate-tilt {
+            animation: tilt 10s infinite linear;
+        }
+        
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+        
+        .animation-delay-4000 {
+            animation-delay: 4s;
+        }
+        
+        /* ナビゲーションホバー効果 */
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            background: linear-gradient(90deg, #fb7185, #f97316);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- ナビバー -->
+    <nav class="bg-white/90 backdrop-blur-md border-b border-brand-100 px-6 py-4 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <img src="/static/styli_icon.png" alt="styli" class="w-12 h-12 icon-pulse rounded-xl object-cover shadow-lg">
+                <div class="text-3xl font-bold text-gradient">
+                    styli
+                </div>
+            </div>
+            <div class="flex space-x-8">
+                <a href="/mypage" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300 flex items-center group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                    </svg>
+                    ホーム
+                </a>
+                <a href="/upload" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300 flex items-center group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                    </svg>
+                    アップロード
+                </a>
+                <a href="/closet" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300 flex items-center group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M4 3a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V4a1 1 0 00-1-1H4zm3 3h6v2H7V6z" />
+                    </svg>
+                    クローゼット
+                </a>
+
+                <a href="/profile/edit" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300">マイページ</a>
+
+                <a href="/users" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300 flex items-center group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v2a2 2 0 002 2h4a2 2 0 002-2V6a4 4 0 00-4-4zM4 12a6 6 0 0112 0v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4z" clip-rule="evenodd" />
+                    </svg>
+                    ユーザー検索
+
+                
+                <a href="/login" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300 flex items-center group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd" />
+                    </svg>
+                    ログアウト
+                </a>
+                
+                </a>
+            </div>
+        </div>
+    </nav>
+
+<!-- ヒーローセクション -->
+<section class="relative overflow-hidden wave-bg">
+    <div class="absolute inset-0">
+        <div class="absolute top-0 left-0 w-72 h-72 bg-brand-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+        <div class="absolute top-0 right-0 w-72 h-72 bg-amber-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div class="absolute -bottom-8 left-20 w-72 h-72 bg-pink-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative">
+        <div class="flex flex-col md:flex-row items-center md:items-start space-y-8 md:space-y-0 md:space-x-12 animate-fade-in">
+            {% if profile and profile.icon_path %}
+            <div class="relative group">
+                <div class="absolute -inset-2 bg-gradient-to-r from-brand-400 to-amber-500 rounded-full blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+                <img src="{{ url_for('static', path='profile_icons/' + profile.icon_path | replace('static/profile_icons/', '')) }}"
+                    alt="アイコン"
+                    class="relative w-32 h-32 rounded-full shadow-2xl object-cover border-4 border-white">
+                <div class="absolute -bottom-3 -right-3 w-10 h-10 bg-gradient-to-r from-brand-400 to-amber-500 rounded-full flex items-center justify-center shadow-lg">
+                    <span class="text-white text-xl animate-bounce">✨</span>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="text-center md:text-left">
+                <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-4">
+                    こんにちは、<br>
+                    <span class="text-gradient animate-pulse">{{ username }}</span> さん！
+                </h1>
+                {% if profile and profile.bio %}
+                <div class="mt-4 p-4 bg-white/60 backdrop-blur-sm rounded-2xl border border-white/40 shadow-lg">
+                    <p class="text-lg text-gray-700 leading-relaxed">
+                        {{ profile.bio }}
+                    </p>
+                </div>
+                {% endif %}
+                <p class="mt-6 text-xl text-gray-700 max-w-3xl animate-slide-up animate-delay-100 leading-relaxed">
+                    今日もファッションコーディネートを楽しみましょう ✨<br>
+                    あなたの個性を輝かせるお手伝いをします 🌟
+                </p>
+                <div class="mt-8 flex flex-wrap gap-3 justify-center md:justify-start">
+                    <span class="px-4 py-2 bg-brand-100 text-brand-600 rounded-full text-sm font-medium">ファッション</span>
+                    <span class="px-4 py-2 bg-amber-100 text-amber-600 rounded-full text-sm font-medium">コーディネート</span>
+                    <span class="px-4 py-2 bg-pink-100 text-pink-600 rounded-full text-sm font-medium">スタイリング</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+    <!-- メインコンテンツ -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 pb-16">
+        <!-- スタッツカード -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
+            <div class="stat-card rounded-2xl p-6 flex flex-col items-center animate-fade-in animate-delay-100 relative overflow-hidden group">
+                <div class="absolute inset-0 bg-gradient-to-br from-brand-400/10 to-amber-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative z-10">
+                    <div class="w-16 h-16 bg-gradient-to-r from-brand-400 to-amber-500 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                        </svg>
+                    </div>
+                    <div class="text-3xl font-bold text-brand-500 mb-2">{{ item_count }}</div>
+                    <div class="text-sm font-medium text-gray-600">登録アイテム</div>
+                </div>
+            </div>
+            <div class="stat-card rounded-2xl p-6 flex flex-col items-center animate-fade-in animate-delay-200 relative overflow-hidden group">
+                <div class="absolute inset-0 bg-gradient-to-br from-pink-400/10 to-purple-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative z-10">
+                    <div class="w-16 h-16 bg-gradient-to-r from-pink-400 to-purple-500 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </div>
+                    <div class="text-3xl font-bold text-pink-500 mb-2">{{ coordinate_count }}</div>
+                    <div class="text-sm font-medium text-gray-600">コーディネート</div>
+                </div>
+            </div>
+            <div class="stat-card rounded-2xl p-6 flex flex-col items-center animate-fade-in animate-delay-300 relative overflow-hidden group">
+                <div class="absolute inset-0 bg-gradient-to-br from-amber-400/10 to-orange-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative z-10">
+                    <div class="w-16 h-16 bg-gradient-to-r from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                        </svg>
+                    </div>
+                    <div class="text-3xl font-bold text-amber-500 mb-2">{{ top_category }}</div>
+                    <div class="text-sm font-medium text-gray-600">お気に入りブランド</div>
+                </div>
+            </div>
+            <div class="stat-card rounded-2xl p-6 flex flex-col items-center animate-fade-in animate-delay-300 relative overflow-hidden group">
+                <div class="absolute inset-0 bg-gradient-to-br from-emerald-400/10 to-teal-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative z-10">
+                    <div class="w-16 h-16 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                        </svg>
+                    </div>
+                    <div class="flex justify-center mb-2">
+                        <div class="w-6 h-6 rounded-full border border-gray-300" style="background-color: {{ common_color }};"></div>
+                      </div>
+                      
+                      
+                    <div class="text-sm font-medium text-gray-600">お気に入り色</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- メインコンテンツグリッド -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- 左側: メインコンテンツ -->
+            <div class="lg:col-span-2">
+                <!-- メインアクションカード -->
+                <div class="card-container rounded-2xl p-8 mb-6 animate-fade-in">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">次のアクションを選択</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                       <!-- アクション1: アイテム登録 -->
+                       <div class="action-card rounded-xl overflow-hidden">
+                        <div class="p-6 bg-gradient-to-br from-white to-blue-50 border border-blue-100 rounded-xl">
+                            <div class="h-12 w-12 bg-gradient-to-r from-blue-500 to-blue-400 rounded-lg text-white flex items-center justify-center mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">アイテムを登録する</h3>
+                            <p class="text-sm text-gray-600 mb-4">お手持ちの服を登録して、コーディネートに活用しましょう。</p>
+                            <a href="/upload" class="btn-gradient w-full block text-center text-white font-medium rounded-lg py-3 px-4">
+                                アップロード
+                            </a>
+                        </div>
+                    </div>
+
+                        <!-- アクション2: コーディネート -->
+                        <div class="action-card rounded-xl overflow-hidden">
+                            <div class="p-6 bg-gradient-to-br from-white to-purple-50 border border-purple-100 rounded-xl">
+                                <div class="h-12 w-12 bg-gradient-to-r from-purple-500 to-purple-400 rounded-lg text-white flex items-center justify-center mb-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">コーディネートする</h3>
+                                <p class="text-sm text-gray-600 mb-4">登録したアイテムを組み合わせて、新しいコーディネートを作成しましょう。</p>
+                                <a href="/coordinate" class="w-full block text-center bg-white border border-purple-300 text-purple-600 font-medium rounded-lg py-3 px-4 hover:bg-purple-50 transition duration-200">
+                                    コーディネート
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 補助アクションカード -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 animate-slide-up">
+                    <div class="action-card rounded-xl overflow-hidden">
+                        <div class="p-6 bg-gradient-to-br from-white to-amber-50 border border-amber-100 rounded-xl">
+                            <div class="h-12 w-12 bg-gradient-to-r from-amber-500 to-amber-400 rounded-lg text-white flex items-center justify-center mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">コーディネート一覧</h3>
+                            <p class="text-sm text-gray-600 mb-4">保存済みのコーディネートを確認しましょう。</p>
+                            <a href="/coordinates" class="w-full block text-center bg-white border border-amber-300 text-amber-600 font-medium rounded-lg py-3 px-4 hover:bg-amber-50 transition duration-200">
+                                一覧を見る
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 今日のコーデ -->
+                    <div class="action-card rounded-xl overflow-hidden">
+                        <div class="p-6 bg-gradient-to-br from-white to-emerald-50 border border-emerald-100 rounded-xl">
+                            <div class="h-12 w-12 bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-lg text-white flex items-center justify-center mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">今日のコーデ</h3>
+                            <p class="text-sm text-gray-600 mb-4">天気や予定に合わせた、今日のおすすめコーディネートをチェック。</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <span class="text-2xl mr-2">☀️</span>
+                                    <span class="text-sm text-gray-600">21°C / 晴れ</span>
+                                </div>
+                                <a href="/today" class="text-emerald-600 text-sm font-medium hover:text-emerald-500 transition duration-200">
+                                    詳細 →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右側: サイドバー -->
+            <div class="space-y-8 animate-slide-in-right">
+                <!-- 最近のアクティビティ -->
+                <div class="card-container rounded-2xl overflow-hidden shadow-lg">
+                    <div class="bg-gradient-to-r from-brand-500 via-pink-500 to-amber-500 px-6 py-4 text-white flex items-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white relative z-10" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
+                        </svg>
+                        <h3 class="ml-3 font-semibold text-lg relative z-10">最近のアクティビティ</h3>
+                        <div class="absolute top-0 right-0 w-20 h-20 bg-white/5 rounded-full -mr-10 -mt-10"></div>
+                    </div>
+                    <div class="p-6">
+                        <div class="space-y-4 text-sm text-gray-700">
+                            {% for log in activity_logs %}
+                            <div class="flex items-start space-x-3 p-3 bg-gradient-to-r from-brand-50 to-amber-50 rounded-xl border border-brand-100 hover:shadow-md transition-shadow duration-200">
+                                <div class="w-2 h-2 bg-gradient-to-r from-brand-400 to-amber-500 rounded-full mt-2 flex-shrink-0"></div>
+                                <p class="leading-relaxed">{{ log }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 最近のアイテム -->
+                <div class="card-container rounded-2xl overflow-hidden shadow-lg">
+                    <div class="px-6 py-4 border-b border-brand-100 bg-gradient-to-r from-brand-50 to-amber-50">
+                        <h3 class="font-semibold text-gray-900 text-lg flex items-center">
+                            <span class="mr-3 text-2xl">👗</span>
+                            最近のアイテム
+                        </h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="space-y-4">
+                            {% for item in recent_items %}
+                            <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 p-4 flex flex-col items-center border border-brand-100 group">
+                                <!-- アイテム画像 -->
+                                <div class="relative overflow-hidden rounded-xl">
+                                    <img src="{{ item.image_url }}" alt="{{ item.name }}" class="w-full h-40 object-contain group-hover:scale-105 transition-transform duration-300">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                </div>
+                                
+                                <!-- アイテム名 -->
+                                <p class="text-sm font-medium text-gray-900 text-center mt-3">{{ item.name }}</p>
+                            </div>
+                            {% endfor %}
+
+                            <a href="/closet" class="block text-center text-sm text-brand-500 font-semibold mt-6 hover:text-brand-600 transition duration-200 bg-gradient-to-r from-brand-50 to-amber-50 rounded-xl py-4 border border-brand-200 hover:shadow-md">
+                                すべてのアイテムを見る →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ログアウト -->
+                <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 text-center border border-brand-100">
+                    <a href="/login" class="inline-flex items-center text-gray-600 hover:text-brand-500 transition duration-300 font-medium group">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd" />
+                        </svg>
+                        ログアウト
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <footer class="mt-auto bg-white/80 backdrop-blur-md border-t border-brand-100 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="flex justify-center items-center space-x-2 mb-4">
+                    <img src="/static/styli_icon.png" alt="styli" class="w-8 h-8 rounded-lg opacity-80">
+                    <span class="text-2xl font-bold text-gradient">styli</span>
+                </div>
+                <p class="text-sm text-gray-600 mb-2">
+                    © 2025 <span class="text-gradient font-bold">styli</span>. All rights reserved.
+                </p>
+                <p class="text-xs text-gray-500">
+                    Made with <span class="text-red-500 animate-pulse">❤️</span> for fashion lovers
+                </p>
+                <div class="mt-4 flex justify-center space-x-6 text-xs text-gray-400">
+                    <span>プライバシーポリシー</span>
+                    <span>利用規約</span>
+                    <span>お問い合わせ</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

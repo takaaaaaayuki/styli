@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>コーディネート提案 | styli</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #fef7f0 0%, #fdf2f8 50%, #fef3e2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        /* アニメーション */
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+        
+        .animate-slide-up {
+            animation: slideUp 0.5s ease-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            0% { transform: translateY(20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        
+        .animate-delay-100 {
+            animation-delay: 0.1s;
+        }
+        
+        .animate-delay-200 {
+            animation-delay: 0.2s;
+        }
+        
+        .animate-delay-300 {
+            animation-delay: 0.3s;
+        }
+
+        /* グラデーションテキスト */
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-image: linear-gradient(90deg, #fb7185, #f97316);
+        }
+
+        /* アイコンプルス効果 */
+        .icon-pulse {
+            animation: iconPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes iconPulse {
+            0%, 100% { 
+                transform: scale(1);
+                filter: drop-shadow(0 0 5px rgba(251, 113, 133, 0.3));
+            }
+            50% { 
+                transform: scale(1.05);
+                filter: drop-shadow(0 0 15px rgba(251, 113, 133, 0.6));
+            }
+        }
+
+        /* ナビゲーションホバー効果 */
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+            color: #6b7280;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            background: linear-gradient(90deg, #fb7185, #f97316);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+        
+        .nav-link:hover {
+            color: #fb7185;
+        }
+
+        /* メインタイトル */
+        .main-title {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
+
+        /* フィルターカード */
+        .filter-card {
+            background: linear-gradient(135deg, #ffffff 0%, #fef7f0 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid #fed7cc;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px -5px rgba(251, 113, 133, 0.1), 0 10px 10px -5px rgba(251, 113, 133, 0.04);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .filter-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* チェックボックス */
+        .checkbox-custom {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fed7cc;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            background: white;
+        }
+
+        .checkbox-custom:checked {
+            background: linear-gradient(90deg, #fb7185, #f97316);
+            border-color: #fb7185;
+        }
+
+        .checkbox-custom:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: #4b5563;
+            padding: 0.75rem;
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .checkbox-label:hover {
+            background: linear-gradient(135deg, #fef7f0 0%, #fef3e2 100%);
+            border-color: #fed7cc;
+            transform: translateY(-1px);
+        }
+
+        /* ボタン */
+        .btn-primary {
+            background: linear-gradient(90deg, #fb7185 0%, #f97316 100%);
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(90deg, #f43f5e 0%, #ea580c 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* コーディネートカード */
+        .coord-card {
+            background: linear-gradient(135deg, #ffffff 0%, #fef7f0 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid #fed7cc;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 10px 25px -5px rgba(251, 113, 133, 0.1), 0 10px 10px -5px rgba(251, 113, 133, 0.04);
+            transition: all 0.3s ease;
+        }
+
+        .coord-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(251, 113, 133, 0.1), 0 10px 10px -5px rgba(251, 113, 133, 0.04);
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            height: 240px;
+            position: relative;
+        }
+
+        .image-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .coord-card:hover .image-container img {
+            transform: scale(1.05);
+        }
+
+        .image-label {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #1f2937;
+            backdrop-filter: blur(10px);
+            border: 1px solid #fed7cc;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .coord-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        /* タグ */
+        .tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #fef7f0 0%, #fef3e2 100%);
+            color: #fb7185;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid #fed7cc;
+        }
+
+        .tag-secondary {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            color: #6b7280;
+            border: 1px solid #e5e7eb;
+        }
+
+        /* フォーム要素 */
+        .input-field {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #fed7cc;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            background: #fef7f0;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #fb7185;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(251, 113, 133, 0.1);
+        }
+
+        .save-btn {
+            background: linear-gradient(90deg, #a855f7, #8b5cf6);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            width: 100%;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .save-btn:hover {
+            background: linear-gradient(90deg, #9333ea, #7c3aed);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 空状態 */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, #ffffff 0%, #fef7f0 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid #fed7cc;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px -5px rgba(251, 113, 133, 0.1), 0 10px 10px -5px rgba(251, 113, 133, 0.04);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        /* カスタムカラー */
+        .bg-brand-50 { background-color: #fef7f0; }
+        .bg-brand-100 { background-color: #fed7cc; }
+        .bg-brand-400 { background-color: #fb7185; }
+        .bg-brand-500 { background-color: #f43f5e; }
+        .bg-brand-600 { background-color: #e11d48; }
+        
+        .text-brand-400 { color: #fb7185; }
+        .text-brand-500 { color: #f43f5e; }
+        .text-brand-600 { color: #e11d48; }
+        
+        .border-brand-100 { border-color: #fed7cc; }
+        .border-brand-200 { border-color: #fecaca; }
+        
+        .hover\:text-brand-500:hover { color: #f43f5e; }
+    </style>
+</head>
+<body>
+    <!-- ナビゲーションバー -->
+    <nav class="bg-white/90 backdrop-blur-md border-b border-brand-100 px-6 py-4 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <img src="/static/styli_icon.png" alt="styli" class="w-12 h-12 icon-pulse rounded-xl object-cover shadow-lg">
+                <div class="text-3xl font-bold text-gradient">
+                    styli
+                </div>
+            </div>
+            <div class="flex space-x-8">
+                <a href="/mypage" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300 flex items-center group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                    </svg>
+                    ホーム
+                </a>
+                <a href="/upload" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300 flex items-center group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                    </svg>
+                    アップロード
+                </a>
+                <a href="/closet" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300 flex items-center group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M4 3a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V4a1 1 0 00-1-1H4zm3 3h6v2H7V6z" />
+                    </svg>
+                    クローゼット
+                </a>
+                <a href="/profile/edit" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300">マイページ</a>
+                <a href="/users" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300 flex items-center group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v2a2 2 0 002 2h4a2 2 0 002-2V6a4 4 0 00-4-4zM4 12a6 6 0 0112 0v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4z" clip-rule="evenodd" />
+                    </svg>
+                    ユーザー検索
+                </a>
+                <a href="/login" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300 flex items-center group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd" />
+                    </svg>
+                    ログアウト
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        <!-- ヘッダー -->
+        <div class="mb-8 animate-fade-in">
+            <h1 class="main-title">
+                <span class="text-gradient">{{ username }}</span> さんへのコーディネート提案
+            </h1>
+            <p class="subtitle">あなたのクローゼットから最適な組み合わせをご提案します ✨</p>
+        </div>
+
+        <!-- フィルターフォーム -->
+        <form method="get" action="/coordinate" class="filter-card animate-slide-up animate-delay-100">
+            <h2 class="filter-title">
+                <span>🎯</span>
+                重視したいスタイリングルール
+            </h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                {% for rule in ['color', 'labels', 'season', 'tpo'] %}
+                <label class="checkbox-label">
+                    <input type="checkbox" name="priority_rules" value="{{ rule }}" 
+                        class="checkbox-custom"
+                        {% if rule in priority_rules %}checked{% endif %}>
+                    <span>{{ {'color': '🎨 カラー', 'labels': '👔 カテゴリ', 'season': '🌸 季節', 'tpo': '📍 TPO'}[rule] }}</span>
+                </label>
+                {% endfor %}
+            </div>
+            <button type="submit" class="btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+                </svg>
+                コーディネートを更新
+            </button>
+        </form>
+
+        {% if coordinates %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-slide-up animate-delay-200">
+            {% for a, b in coordinates %}
+            <div class="coord-card" style="animation: slideUp 0.5s ease-out forwards; animation-delay: {{ 0.2 + (loop.index * 0.05) }}s; opacity: 0;">
+                <div class="image-grid">
+                    <div class="image-container">
+                        <img src="{{ a.image_path | replace('static/', '/static/') }}" alt="{{ a.name }}">
+                        <span class="image-label">{{ a.labels }}</span>
+                    </div>
+                    <div class="image-container">
+                        <img src="{{ b.image_path | replace('static/', '/static/') }}" alt="{{ b.name }}">
+                        <span class="image-label">{{ b.labels }}</span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3 class="coord-title">{{ a.name }} × {{ b.name }}</h3>
+                    <div class="mb-4">
+                        <span class="tag">🌸 {{ a.season }}</span>
+                        <span class="tag">📍 {{ a.tpo }}</span>
+                    </div>
+                    <div class="mb-4">
+                        <span class="tag tag-secondary">{{ a.color_category }}</span>
+                        <span class="tag tag-secondary">{{ b.color_category }}</span>
+                    </div>
+
+                    <!-- 保存フォーム -->
+                    <form method="post" action="/save-coordinate" class="space-y-3">
+                        <input type="hidden" name="item_ids" value="{{ a.id }},{{ b.id }}">
+                        <input type="text" 
+                            name="title" 
+                            placeholder="コーディネート名（任意）" 
+                            class="input-field" />
+                        <textarea name="description" 
+                            rows="2" 
+                            placeholder="メモ・着用シーン（任意）" 
+                            class="input-field"></textarea>
+                        <button type="submit" class="save-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
+                            </svg>
+                            このコーディネートを保存
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state animate-slide-up animate-delay-300">
+            <div class="empty-icon">😔</div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">コーディネートが見つかりませんでした</h3>
+            <p class="text-gray-600">条件を変更して、新しい組み合わせを探してみましょう ✨</p>
+        </div>
+        {% endif %}
+    </main>
+</body>
+</html>

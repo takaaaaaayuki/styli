@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>保存済みコーディネート | styli</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #fef7f0 0%, #fdf2f8 50%, #fef3e2 100%);
+            min-height: 100vh;
+        }
+        
+        /* アニメーション */
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+        
+        .animate-slide-up {
+            animation: slideUp 0.5s ease-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            0% { transform: translateY(20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        
+        .animate-delay-100 {
+            animation-delay: 0.1s;
+        }
+        
+        .animate-delay-200 {
+            animation-delay: 0.2s;
+        }
+        
+        .animate-delay-300 {
+            animation-delay: 0.3s;
+        }
+        
+        /* グラデーションテキスト */
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-image: linear-gradient(90deg, #fb7185, #f97316);
+        }
+        
+        /* アイコンプルス効果 */
+        .icon-pulse {
+            animation: iconPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes iconPulse {
+            0%, 100% { 
+                transform: scale(1);
+                filter: drop-shadow(0 0 5px rgba(251, 113, 133, 0.3));
+            }
+            50% { 
+                transform: scale(1.05);
+                filter: drop-shadow(0 0 15px rgba(251, 113, 133, 0.6));
+            }
+        }
+        
+        /* ナビゲーションホバー効果 */
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            background: linear-gradient(90deg, #fb7185, #f97316);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+        
+        /* カードスタイル */
+        .coord-card {
+            background: linear-gradient(135deg, #ffffff 0%, #fef7f0 100%);
+            border: 1px solid #fed7cc;
+            box-shadow: 0 10px 25px -5px rgba(251, 113, 133, 0.1), 0 10px 10px -5px rgba(251, 113, 133, 0.04);
+            transition: all 0.3s ease;
+        }
+        
+        .coord-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(251, 113, 133, 0.1), 0 10px 10px -5px rgba(251, 113, 133, 0.04);
+        }
+        
+        .coord-card img {
+            transition: transform 0.3s ease;
+        }
+        
+        .coord-card:hover img {
+            transform: scale(1.02);
+        }
+        
+        /* ボタンスタイル */
+        .btn-gradient {
+            background: linear-gradient(90deg, #fb7185 0%, #f97316 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient:hover {
+            background: linear-gradient(90deg, #f43f5e 0%, #ea580c 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-danger:hover {
+            background: linear-gradient(90deg, #dc2626 0%, #b91c1c 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* ヘッダーカード */
+        .header-card {
+            background: linear-gradient(135deg, #ffffff 0%, #fef7f0 100%);
+            border: 1px solid #fed7cc;
+            box-shadow: 0 10px 25px -5px rgba(251, 113, 133, 0.1), 0 10px 10px -5px rgba(251, 113, 133, 0.04);
+        }
+        
+        /* セクションタイトル */
+        .section-title {
+            background: linear-gradient(135deg, #ffffff 0%, #fef7f0 100%);
+            border: 1px solid #fed7cc;
+            box-shadow: 0 4px 6px -1px rgba(251, 113, 133, 0.1);
+        }
+        
+        /* 空状態 */
+        .empty-state {
+            background: linear-gradient(135deg, #ffffff 0%, #fef7f0 100%);
+            border: 1px solid #fed7cc;
+            box-shadow: 0 10px 25px -5px rgba(251, 113, 133, 0.1), 0 10px 10px -5px rgba(251, 113, 133, 0.04);
+        }
+        
+        /* カスタムカラー */
+        .bg-brand-50 { background-color: #fef7f0; }
+        .bg-brand-100 { background-color: #fed7cc; }
+        .bg-brand-400 { background-color: #fb7185; }
+        .bg-brand-500 { background-color: #f43f5e; }
+        .bg-brand-600 { background-color: #e11d48; }
+        
+        .text-brand-400 { color: #fb7185; }
+        .text-brand-500 { color: #f43f5e; }
+        .text-brand-600 { color: #e11d48; }
+        
+        .border-brand-100 { border-color: #fed7cc; }
+        .border-brand-200 { border-color: #fecaca; }
+        
+        .hover\:text-brand-500:hover { color: #f43f5e; }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- ナビバー -->
+    <nav class="bg-white/90 backdrop-blur-md border-b border-brand-100 px-6 py-4 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <img src="/static/styli_icon.png" alt="styli" class="w-12 h-12 icon-pulse rounded-xl object-cover shadow-lg">
+                <div class="text-3xl font-bold text-gradient">
+                    styli
+                </div>
+            </div>
+            <div class="flex space-x-8">
+                <a href="/mypage" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300 flex items-center group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                    </svg>
+                    ホーム
+                </a>
+                <a href="/upload" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300 flex items-center group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                    </svg>
+                    アップロード
+                </a>
+                <a href="/closet" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300 flex items-center group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M4 3a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V4a1 1 0 00-1-1H4zm3 3h6v2H7V6z" />
+                    </svg>
+                    クローゼット
+                </a>
+                <a href="/profile/edit" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300">マイページ</a>
+                <a href="/users" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300 flex items-center group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v2a2 2 0 002 2h4a2 2 0 002-2V6a4 4 0 00-4-4zM4 12a6 6 0 0112 0v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4z" clip-rule="evenodd" />
+                    </svg>
+                    ユーザー検索
+                </a>
+                <a href="/login" class="nav-link text-gray-600 hover:text-brand-500 font-medium transition-all duration-300 flex items-center group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd" />
+                    </svg>
+                    ログアウト
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-4 py-10">
+        <!-- ヘッダーセクション -->
+        <div class="header-card rounded-2xl p-6 mb-8 animate-fade-in">
+            <div class="flex items-center justify-between flex-wrap gap-4">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800 mb-2">
+                        <span class="text-gradient">{{ username }}</span> さんのコーディネート一覧
+                    </h1>
+                    <p class="text-gray-600">保存されたコーディネートをご覧いただけます ✨</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-brand-500">{{ (coordinates|length) + (manual_coordinates|length) }}</div>
+                        <div class="text-sm font-medium text-gray-600">コーディネート</div>
+                    </div>
+                    <div class="w-12 h-12 bg-gradient-to-br from-brand-500 to-orange-500 rounded-xl flex items-center justify-center text-white shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 新規作成ボタン -->
+        <div class="mb-8 animate-slide-up animate-delay-100">
+            <a href="/create" class="btn-gradient inline-flex items-center text-white px-6 py-3 rounded-xl font-semibold shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                新規コーディネートを作成する
+            </a>
+        </div>
+
+        <!-- 既存の Coordinate 表示 -->
+        {% if coordinates %}
+        <div class="section-title rounded-xl p-4 mb-6 animate-slide-up animate-delay-200">
+            <h2 class="text-xl font-bold text-gray-800 flex items-center">
+                <span class="mr-3 text-2xl">🎯</span>
+                AIコーディネート提案
+            </h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 animate-slide-up animate-delay-300">
+            {% for coord in coordinates %}
+            <div class="coord-card rounded-xl overflow-hidden">
+                <div class="grid grid-cols-2 gap-0">
+                    {% for item_id in coord.item_ids.split(",") %}
+                        {% set item = item_dict.get(item_id) %}
+                        {% if item %}
+                        <img src="{{ item.image_path | replace('static/', '/static/') }}" alt="{{ item.name }}" class="w-full h-48 object-cover">
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ coord.title }}</h3>
+                    <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ coord.description }}</p>
+                    <div class="flex items-center justify-between mb-4">
+                        <p class="text-xs text-gray-500 bg-brand-50 px-3 py-1 rounded-full border border-brand-100">
+                            作成日: {{ coord.created_at.strftime('%Y-%m-%d %H:%M') }}
+                        </p>
+                    </div>
+                    <form method="post" action="/delete-coordinate/{{ coord.id }}" onsubmit="return confirm('このコーディネートを削除してもよろしいですか？');">
+                        <button type="submit" class="btn-danger w-full text-white px-4 py-2 text-sm rounded-lg font-semibold flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                            削除
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- ManualCoordinate 表示 -->
+        {% if manual_coordinates %}
+        <div class="section-title rounded-xl p-4 mb-6 animate-slide-up animate-delay-200">
+            <h2 class="text-xl font-bold text-gray-800 flex items-center">
+                <span class="mr-3 text-2xl">✋</span>
+                手動で作成されたコーディネート
+            </h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-slide-up animate-delay-300">
+            {% for coord in manual_coordinates %}
+            <div class="coord-card rounded-xl overflow-hidden">
+                <div class="grid grid-cols-2 gap-0">
+                    {% for item_id in coord.item_ids.split(",") %}
+                        {% set item = item_dict.get(item_id) %}
+                        {% if item %}
+                        <img src="{{ item.image_path | replace('static/', '/static/') }}" alt="{{ item.name }}" class="w-full h-48 object-cover">
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ coord.title }}</h3>
+                    <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ coord.description }}</p>
+                    <div class="flex items-center justify-between mb-4">
+                        <p class="text-xs text-gray-500 bg-brand-50 px-3 py-1 rounded-full border border-brand-100">
+                            作成日: {{ coord.created_at.strftime('%Y-%m-%d %H:%M') }}
+                        </p>
+                    </div>
+                    <form method="post" action="/delete-manual-coordinate/{{ coord.id }}" onsubmit="return confirm('この手動コーディネートを削除してもよろしいですか？');">
+                        <button type="submit" class="btn-danger w-full text-white px-4 py-2 text-sm rounded-lg font-semibold flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                            削除
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- 空状態 -->
+        {% if not coordinates and not manual_coordinates %}
+        <div class="empty-state rounded-3xl p-20 text-center animate-slide-up animate-delay-200">
+            <div class="w-32 h-32 bg-gradient-to-br from-brand-200 to-orange-200 rounded-full mx-auto mb-8 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+            </div>
+            <h3 class="text-3xl font-bold text-gray-700 mb-4">まだコーディネートがありません</h3>
+            <p class="text-gray-600 text-xl mb-8 leading-relaxed">新しいコーディネートを作成して、あなたのスタイルを楽しみましょう！ ✨</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="/coordinate" class="btn-gradient inline-flex items-center text-white px-8 py-4 rounded-xl font-bold text-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                    AI提案を見る
+                </a>
+                <a href="/create" class="bg-white border-2 border-brand-200 text-brand-600 hover:bg-brand-50 inline-flex items-center px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    手動で作成
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </main>
+
+</body>
+</html>
