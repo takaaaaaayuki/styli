@@ -30,11 +30,7 @@ from fastapi import Cookie
 
 load_dotenv()
 
-# ✅ Google Cloud Vision API用のcredentialsをRenderで使うための処理
-if os.getenv("GOOGLE_CREDENTIALS_JSON"):
-    with open("credentials.json", "w") as f:
-        f.write(os.getenv("GOOGLE_CREDENTIALS_JSON"))
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "credentials.json"
+
 
 
 UPLOAD_ITEM_DIR = "static/uploads"
